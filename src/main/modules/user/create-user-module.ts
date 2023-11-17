@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CreateUserController } from '../../../interface/controllers';
 import { CreateUserUsecase } from '../../../application';
-import { FakeUserRepository } from '../../../infra/repositories';
+import { SqliteUserRepository } from '../../../infra/repositories';
+import { env } from '../app.module';
 
 @Module({
   controllers: [CreateUserController],
@@ -9,7 +10,8 @@ import { FakeUserRepository } from '../../../infra/repositories';
     CreateUserUsecase,
     {
       provide: 'UserRepository',
-      useFactory: () => new FakeUserRepository(),
+      useFactory: () =>
+        new SqliteUserRepository(env.database, env.username, env.password),
     },
   ],
 })
